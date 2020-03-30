@@ -8,7 +8,6 @@ class CalcTests(TestCase):
         """test add(a,b) function, numbers a and b are added correctly"""
         self.assertEqual(add(3, 8), 11)
 
-
     def test_subtract_numbers(self):
         """test subtract(a,b) function, where a gets subtracted from b"""
         self.assertEqual(subtract(3, 11), 8)
