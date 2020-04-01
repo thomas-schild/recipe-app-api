@@ -8,7 +8,7 @@ class UserManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
         """create a new user, persist and return him"""
         # create
-        user = self.model(email=email, **extra_fields)
+        user = self.model(email=self.normalize_email(email), **extra_fields)
         user.set_password(password)     # password gets hashed
         # persist
         user.save(using=self._db)
