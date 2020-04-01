@@ -1,5 +1,6 @@
 from django.db import models
-from django.contrib.auth.models import BaseUserManager, AbstractBaseUser, PermissionsMixin
+from django.contrib.auth.models \
+    import BaseUserManager, AbstractBaseUser, PermissionsMixin
 
 
 class UserManager(BaseUserManager):
@@ -8,7 +9,7 @@ class UserManager(BaseUserManager):
         """create a new user, persist and return him"""
         # create
         user = self.model(email=email, **extra_fields)
-        user.set_password(password) # password gets hashed
+        user.set_password(password)     # password gets hashed
         # persist
         user.save(using=self._db)
         # return
