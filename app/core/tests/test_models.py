@@ -30,7 +30,8 @@ class ModelTests(TestCase):
             password=testPasswd
         )
         # assert email domain part is on lower case
-        normalizedEmail = '{}@{}'.format(testEmailUser, testEmailDomain.lower())
+        normalizedEmail = '{}@{}'.format(
+            testEmailUser,
+            testEmailDomain.lower()
+        )
         self.assertEqual(user.email, normalizedEmail)
-
-
