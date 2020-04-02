@@ -35,3 +35,17 @@ class ModelTests(TestCase):
             testEmailDomain.lower()
         )
         self.assertEqual(user.email, normalizedEmail)
+
+    def test_create_user_failes_for_invalid_email(self):
+        """Assert that an error is raised if no valid email \
+        is provided when user is created"""
+        # setup
+        testEmail = None
+        testPasswd = 'dummy-secret-pw'
+        # assert, when run
+        with self.assertRaises(ValueError):
+            get_user_model().objects.create_user(
+                email=testEmail,
+                password=testPasswd
+            )
+        

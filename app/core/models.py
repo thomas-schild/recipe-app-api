@@ -8,6 +8,10 @@ class UserManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
         """create a new user, persist and return him"""
         # create
+        if not email:
+            raise ValueError(
+                "no email, though create_user demands a valid email"
+            )
         user = self.model(email=self.normalize_email(email), **extra_fields)
         user.set_password(password)     # password gets hashed
         # persist
