@@ -48,4 +48,3 @@ class ModelTests(TestCase):
                 email=testEmail,
                 password=testPasswd
             )
-        
