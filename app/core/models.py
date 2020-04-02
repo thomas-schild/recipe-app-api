@@ -19,6 +19,18 @@ class UserManager(BaseUserManager):
         # return
         return user
 
+    def create_superuser(self, email, password):
+        """create a new superuser, persist and return him"""
+        # create
+        user = self.create_user(email, password)
+        user.is_staff = True
+        user.is_superuser = True
+        # (?) How to grant extended permissions?
+        # persist
+        user.save(using=self._db)
+        # return
+        return user
+
 
 class User(AbstractBaseUser, PermissionsMixin):
     """custom user model using email instead of a username"""
