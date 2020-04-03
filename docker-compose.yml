@@ -10,4 +10,17 @@ services:
       - ./app:/app
     command: >
       sh -c "python manage.py runserver 0.0.0.0:8000"
-    
+    environment: 
+      - DB_HOST=db                  # must match database service (1)
+      - DB_NAME=app                 # must map to the database (2)
+      - DB_USER=db-app-user         # must map to the db user (3)
+      - DB_PASS=db-app-userpasswd   # must map to the db user's password (4), this is unsafe, do NOT use on production!
+    depends_on: 
+      - db        # => a) 'db' is started before 'app', b) 'app' can access 'db' on docker network
+
+  db:                                           # (1)
+    image: postgres:12.2-alpine
+    environment: 
+      - POSTGRES_DB=app                         # (2)
+      - POSTGRES_USER=db-app-user               # (3)
+      - POSTGRES_PASSWORD=db-app-userpasswd     # (4); this is unsafe, do NOT use on production!
