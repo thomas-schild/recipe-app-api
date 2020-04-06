@@ -10,7 +10,7 @@ class ModelTests(TestCase):
         testEmail = 'dummy.user@demo.org'
         testPasswd = 'dummy-secret-pw'
         # run
-        user = get_user_model().objects.create_user(
+        user = create_user(
             email=testEmail,
             password=testPasswd
         )
@@ -25,7 +25,7 @@ class ModelTests(TestCase):
         testEmailDomain = 'dEmo.Org'
         testPasswd = 'dummy-secret-pw'
         # run
-        user = get_user_model().objects.create_user(
+        user = create_user(
             email='{}@{}'.format(testEmailUser, testEmailDomain),
             password=testPasswd
         )
@@ -44,7 +44,7 @@ class ModelTests(TestCase):
         testPasswd = 'dummy-secret-pw'
         # assert, when run
         with self.assertRaises(ValueError):
-            get_user_model().objects.create_user(
+            create_user(
                 email=testEmail,
                 password=testPasswd
             )
@@ -59,3 +59,8 @@ class ModelTests(TestCase):
         # assert
         self.assertTrue(superuser.is_superuser)
         self.assertTrue(superuser.is_staff)
+
+
+def create_user(**params):
+    """helper function to create a new user"""
+    return get_user_model().objects.create_user(**params)
