@@ -23,3 +23,6 @@ Receipe app api source code
         > curl -d "email=test.demo@demo.org&password=secret&name='Demo User'" -H "Content-Type: application/x-www-form-urlencoded" -X POST http://localhost:8000/api/user/create/
     * ensure token is provided with right credentials for this user
         > curl -d "email=test.demo@demo.org&password=secret" -H "Content-Type: application/x-www-form-urlencoded" -X POST http://localhost:8000/api/user/token/
+
+    * access the user's profile for an authenticaed user
+        > curl -H "Authorization: Token f6f46a1c8160fedcc53174302e6ef929198732fb" -X GET http://localhost:8000/api/user/me/
