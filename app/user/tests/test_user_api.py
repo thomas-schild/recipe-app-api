@@ -7,6 +7,7 @@ from rest_framework import status
 
 CREATE_USER_URL = reverse('user:create')
 TOKEN_URL = reverse('user:token')
+SELF_URL = reverse('user:self')
 
 
 def create_user(**params):
@@ -130,3 +131,81 @@ class PublicUserApiTests(TestCase):
         # assert
         self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertNotIn('token', resp.data)
+
+    def test_retrieve_user_unauthorized_fails(self):
+        """Assert that authentication is required to access a user's profile"""
+        # run
+        resp = self.client.get(SELF_URL)
+        # assert
+        self.assertEqual(resp.status_code, status.HTTP_401_UNAUTHORIZED)
+
+
+class PrivateUserApiTests(TestCase):
+    """Test the User's _private_ API,
+        _private_ means authentication is required"""
+
+    def setUp(self):
+        self.client = APIClient()
+        self.user = create_user(
+            email='dummy.user@demo.org',
+            password='secret',
+            name='Dummy Test User'
+        )
+        self.client.force_authenticate(user=self.user)
+
+    def test_retrieve_user_profile_success(self):
+        """Test that user can access his profile"""
+        # run
+        resp = self.client.get(SELF_URL)
+        # assert
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        self.assertEqual(resp.data, {
+            'email': self.user.email,
+            'name': self.user.name
+        })
+
+    def test_post_method_for_user_profile_fails(self):
+        """Assert that POST method is not allowed on user's profile"""
+        # prepare
+        payload = {
+            'email': 'dummy.user@demo.org',
+            'password': 'dummy-secret-pw',
+            'name': 'Dummy User updated'
+        }
+        # run
+        resp = self.client.post(SELF_URL, payload)
+        # assert
+        self.assertEqual(resp.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
+
+    def test_update_user_profile_success(self):
+        """Test updating a user profile for authenticated user"""
+        # prepare
+        payload = {
+            'email': 'dummy.user@demo.org',
+            'password': 'dummy-secret-pw',
+            'name': 'Dummy User updated'
+        }
+        # run
+        resp = self.client.put(SELF_URL, payload)
+        self.user.refresh_from_db()
+        # assert
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        self.assertEqual(self.user.email, payload['email'])
+        self.assertEqual(self.user.name, payload['name'])
+        self.assertTrue(self.user.check_password(payload['password']))
+
+    def test_patch_user_profile_success(self):
+        """Test patching a user profile for authenticated user"""
+        # prepare
+        prev_email = self.user.email
+        payload = {
+            # no password or email provided here, only name is patched
+            'name': 'Dummy User updated'
+        }
+        # run
+        resp = self.client.patch(SELF_URL, payload)
+        self.user.refresh_from_db()
+        # assert
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        self.assertEqual(self.user.name, payload['name'])
+        self.assertEqual(self.user.email, prev_email)
