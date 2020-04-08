@@ -62,3 +62,13 @@ class ModelTests(TestCase):
         # assert
         self.assertTrue(superuser.is_superuser)
         self.assertTrue(superuser.is_staff)
+
+    def test_tag_str(self):
+        """Test a tag's string representation"""
+        # run - create a Tag
+        tag = models.Tag.objects.create(
+            name='Test Tag',
+            user=sample_user(),
+        )
+        # assert
+        self.assertEqual(str(tag), tag.name)
