@@ -1,5 +1,14 @@
 from django.test import TestCase
 from django.contrib.auth import get_user_model
+from core import models
+
+
+def sample_user(
+        email='dummy.user@demo.org',
+        password='dummy-secret-pw'
+     ):
+    """helper function to create a sample user"""
+    return get_user_model().objects.create_user(email, password)
 
 
 class ModelTests(TestCase):
@@ -10,7 +19,7 @@ class ModelTests(TestCase):
         testEmail = 'dummy.user@demo.org'
         testPasswd = 'dummy-secret-pw'
         # run
-        user = create_user(
+        user = sample_user(
             email=testEmail,
             password=testPasswd
         )
@@ -23,12 +32,12 @@ class ModelTests(TestCase):
         # setup / prepare
         testEmailUser = 'dUmmy.User'
         testEmailDomain = 'dEmo.Org'
-        testPasswd = 'dummy-secret-pw'
-        # run
-        user = create_user(
-            email='{}@{}'.format(testEmailUser, testEmailDomain),
-            password=testPasswd
+        testEmail = '{}@{}'.format(
+            testEmailUser,
+            testEmailDomain
         )
+        # run
+        user = sample_user(email=testEmail)
         # assert email domain part is on lower case
         normalizedEmail = '{}@{}'.format(
             testEmailUser,
@@ -36,18 +45,12 @@ class ModelTests(TestCase):
         )
         self.assertEqual(user.email, normalizedEmail)
 
-    def test_create_user_failes_for_invalid_email(self):
+    def test_create_user_fails_for_invalid_email(self):
         """Assert that an error is raised if no valid email \
         is provided when user is created"""
-        # setup
-        testEmail = None
-        testPasswd = 'dummy-secret-pw'
         # assert, when run
         with self.assertRaises(ValueError):
-            create_user(
-                email=testEmail,
-                password=testPasswd
-            )
+            sample_user(email=None)
 
     def test_create_superuser(self):
         """Test creating a superuser is successful"""
@@ -59,8 +62,3 @@ class ModelTests(TestCase):
         # assert
         self.assertTrue(superuser.is_superuser)
         self.assertTrue(superuser.is_staff)
-
-
-def create_user(**params):
-    """helper function to create a new user"""
-    return get_user_model().objects.create_user(**params)

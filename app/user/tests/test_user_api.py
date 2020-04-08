@@ -73,7 +73,7 @@ class PublicUserApiTests(TestCase):
         # prepare
         payload = {
             'email': 'dummy.user@demo.org',
-            'password': 'pw123',
+            'password': 'dummy-secret-pw',
             'name': 'Dummy User'
         }
         # ... create a user with this payload, i.e. the 'given' user
@@ -107,7 +107,7 @@ class PublicUserApiTests(TestCase):
         # prepare
         payload = {
             'email': 'dummy.user@demo.org',
-            'password': 'invalid',
+            'password': 'dummy-secret-pw',
             'name': 'Dummy User'
         }
         # run
@@ -148,7 +148,7 @@ class PrivateUserApiTests(TestCase):
         self.client = APIClient()
         self.user = create_user(
             email='dummy.user@demo.org',
-            password='secret',
+            password='dummy-secret-pw',
             name='Dummy Test User'
         )
         self.client.force_authenticate(user=self.user)

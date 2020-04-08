@@ -1,5 +1,6 @@
 # recipe-app-api
 Receipe app api source code
+Check Udemy Course [Build a Backend REST API with Python & Django](https://www.udemy.com/course/django-python-advanced/) by Mark Winterbottom
 
 ## Python/Django templating
 
