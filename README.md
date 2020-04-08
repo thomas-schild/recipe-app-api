@@ -1,6 +1,24 @@
 # recipe-app-api
 Receipe app api source code
 
+## Python/Django templating
+
+    * run python/django's management tool to create an app module, e.g. for the app's core module:
+        > docker-compose run --rm app sh -c "python manage.py startapp core"
+    * the modules are:
+      - core
+      - user
+      - recipe
+      - ...
+
+## cleanup and extend the created stuff
+
+    * models are only kept in the core module => therefore remove models.py elsewhere
+    * migrations only needed for models => remove migrations sub-folder else where
+    * use a designated test folder instead of tests.py => remove tests.py, mkdir tests, touch tests/__init__.py
+    * ...
+    * enable app module in app/settings.py
+
 ## Django-Admin
 
     * run the recipe-app 
